@@ -67,7 +67,7 @@ io.on('connection', function(socket) {
 
     socket.on('roomList', function() {
 
-
+        var listRoomTab = [];
 
         Object.keys(io.nsps['/'].adapter.rooms).forEach(function(key) {
 
@@ -77,15 +77,12 @@ io.on('connection', function(socket) {
             // nom des rooms 
             console.log("room name ", key);
 
-
-            Object.keys(io.nsps['/'].adapter.rooms[key].sockets).forEach(function(key2) {
-
-                // id des player in rooms
-                console.log("id player ", key2);
-
-            })
+            listRoomTab.push(key);
 
         })
+
+        io.sockets.to(socket.id).emit(listRoomTab);
+
     })
 
 
@@ -95,6 +92,9 @@ io.on('connection', function(socket) {
 
     socket.on('playerListRoom', function() {
 
+
+        // on récupérer le nom de la room du joueur
+
         Object.keys(socket.rooms).forEach(function(room, idx) {
 
             if (idx == 1) {
@@ -102,6 +102,8 @@ io.on('connection', function(socket) {
             }
 
         });
+
+
         var tabPlayerInRoom = [];
 
         Object.keys(io.nsps['/'].adapter.rooms).forEach(function(key) {
@@ -125,6 +127,10 @@ io.on('connection', function(socket) {
                     console.log("id player ", key2);
 
                 })
+
+
+                io.sockets.to(socket.id).emit(tabPlayerInRoom);
+
 
             }
 
